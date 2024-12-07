@@ -1,0 +1,9 @@
+package com.kadiraksoy.todoapp.exception;
+
+
+public class BaseException extends RuntimeException {
+
+    public BaseException(String message) {
+        super(message);
+    }
+}
