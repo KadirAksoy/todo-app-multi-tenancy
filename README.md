@@ -16,33 +16,32 @@ Bu, çoklu kullanıcıların aynı anda uygulamayı kullanırken tenant bilgiler
 - Performans:
 - Tenant bilgisi her istekte global bir değişkende saklanıp sorgulanmak yerine iş parçacığına özel tutulduğu için daha hızlıdır.
     
-    - private static final ThreadLocal<String> currentTenant = new ThreadLocal<>();
+       private static final ThreadLocal<String> currentTenant = new ThreadLocal<>();
 ------------------------------------------------------
 - Mevcut iş parçacığına (thread) ait tenant bilgisini döndürür
 - Hibernate gibi ORM araçlarında hangi tenant'ın (örneğin, veritabanı şeması)
 - kullanılması gerektiğini belirlemek için çağrılır.
 - API işlemleri sırasında, iş parçacığına atanmış tenant bilgisine ihtiyaç duyulursa bu yöntem kullanılabilir.
     
-    - public static String getCurrentTenant() {
-        return currentTenant.get();
-    }
+       public static String getCurrentTenant() {
+        return currentTenant.get();}
+  
 ------------------------------------------------------
 - Mevcut iş parçacığına bir tenant bilgisi atar.
 - tenant: Tenant'ın adı veya ID'si (örneğin, bir veritabanı şeması adı).
 - API isteği geldiğinde, istek başlatılırken Filter veya Interceptor gibi bir mekanizma üzerinden tenant bilgisi alınır ve burada iş parçacığına atanır.
 - Bu bilgi daha sonra veritabanı bağlantılarında veya iş mantığında kullanılabilir.
     
-    - public static void setTenant(String tenant) {
-        currentTenant.set(tenant);
-    }
+         public static void setTenant(String tenant) {
+            currentTenant.set(tenant);}
+  
 ------------------------------------------------------
 - İş parçacığına atanmış tenant bilgisini temizler.
 - API isteği tamamlandığında, iş parçacığındaki tenant bilgisini temizlemek için çağrılır.
 - Bu, aynı iş parçacığının farklı bir tenant için yeniden kullanıldığında eski bilgilerin karışmasını engeller.
     
-    - public static void clearTenant() {
-        currentTenant.remove();
-    }
+         public static void clearTenant() {
+            currentTenant.remove();}
 
 
 # Class TenantIdentifierResolver
@@ -50,7 +49,7 @@ Bu, çoklu kullanıcıların aynı anda uygulamayı kullanırken tenant bilgiler
 - Amaç: Tenant bilgisi bulunamazsa veya belirtilmezse kullanılacak varsayılan tenant'ı
 - (örneğin, şema adı) belirtir. Bu Koddaki Ayar: Varsayılan tenant public şemasıdır.
   
-  - public static final String DEFAULT_TENANT = "public";
+   public static final String DEFAULT_TENANT = "public";
 ------------------------------------------------------
 
 -Hibernate'in işlem sırasında hangi tenant'ı (örneğin şema) kullanacağını belirler.
@@ -61,13 +60,13 @@ Bu, çoklu kullanıcıların aynı anda uygulamayı kullanırken tenant bilgiler
 - Eğer tenantId boş veya null ise, varsayılan tenant (örneğin public) döndürülür.
 - Önemi: İşlemin hangi tenant üzerinde gerçekleşeceğini dinamik olarak belirler.
 
-    @Override
-    - public String resolveCurrentTenantIdentifier() {
-        String tenantId = TenantContext.getCurrentTenant();
-        if (tenantId != null && !tenantId.isEmpty()) {
-            return tenantId;
-        }
-        return DEFAULT_TENANT;
+         @Override
+         public String resolveCurrentTenantIdentifier() {
+            String tenantId = TenantContext.getCurrentTenant();
+            if (tenantId != null && !tenantId.isEmpty()) {
+                return tenantId;
+            }
+            return DEFAULT_TENANT;}
 
  ------------------------------------------------------
 
@@ -75,75 +74,68 @@ Bu, çoklu kullanıcıların aynı anda uygulamayı kullanırken tenant bilgiler
 - false olarak ayarlandığı için mevcut oturumlarda tenant bilgisi doğrulanmaz.
 - Bu, performansı artırabilir ancak daha az güvenli bir yapı olabilir.
 
-    @Override
-    - public boolean validateExistingCurrentSessions() {
-        return false;
+         @Override
+         public boolean validateExistingCurrentSessions() {
+            return false;}
 
 ------------------------------------------------------
 
 # Class TenantConnectionProvider
 
-    - private final DataSource dataSource;
+          private final DataSource dataSource;
  
  - tenant için bağlantı sağlar
    
-    @Override
-    - public Connection getAnyConnection() throws SQLException {
-        return dataSource.getConnection();
-    }
+         @Override
+         public Connection getAnyConnection() throws SQLException {
+            return dataSource.getConnection();}
 
 ------------------------------------------------------
 
 - Verilen bağlantıyı serbest bırakır ve kapatır.
    
-    @Override
-    - public void releaseAnyConnection(Connection connection) throws SQLException {
-        connection.close();
-    }
+         @Override
+         public void releaseAnyConnection(Connection connection) throws SQLException {
+            connection.close();}
 
 ------------------------------------------------------
 
 - (tenant) kimliği ile bir bağlantı alır.
 - Bu bağlantının şeması, tenantIdentifier ile belirtilen şemaya ayarlanır.
   
-    @Override
-    - public Connection getConnection(String tenantIdentifier) throws SQLException {
-        final Connection connection = getAnyConnection();
-
-        connection.setSchema(tenantIdentifier.toString());
-
-        return connection;
-    }
-
-------------------------------------------------------
-
-    @Override
-    public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
-        connection.setSchema(TenantIdentifierResolver.DEFAULT_TENANT);
-
-        releaseAnyConnection(connection);
-    }
+          @Override
+          public Connection getConnection(String tenantIdentifier) throws SQLException {
+            final Connection connection = getAnyConnection();
+    
+            connection.setSchema(tenantIdentifier.toString());
+    
+            return connection;}
 
 ------------------------------------------------------
 
-    @Override
-    public boolean supportsAggressiveRelease() {
-        return false;
-    }
+        @Override
+        public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
+            connection.setSchema(TenantIdentifierResolver.DEFAULT_TENANT);
+    
+            releaseAnyConnection(connection);}
+
+------------------------------------------------------
+    
+        @Override
+        public boolean supportsAggressiveRelease() {
+            return false;}
 
 ------------------------------------------------------
 
-    @Override
-    public boolean isUnwrappableAs(Class unwrapType) {
-        return false;
-    }
+        @Override
+        public boolean isUnwrappableAs(Class unwrapType) {
+            return false;}
 
 ------------------------------------------------------
 
-    @Override
-    public <T> T unwrap(Class<T> unwrapType) {
-        return null;
-    }  
+        @Override
+        public <T> T unwrap(Class<T> unwrapType) {
+            return null;}  
 
 ------------------------------------------------------
 
@@ -151,22 +143,22 @@ Bu, çoklu kullanıcıların aynı anda uygulamayı kullanırken tenant bilgiler
 
  - X-Tenant-ID header'ı üzerinden tenant bilgisi alınır ve TenantContext'e atanır. İstek tamamlanınca bilgi temizlenir.
  
-        @Override
-        - public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-            String tenantId = httpRequest.getHeader("X-Tenant-ID");
-
-            try {
-                if (tenantId != null && !tenantId.isEmpty()) {
-                    TenantContext.setTenant(tenantId);
-                } else {
-                    TenantContext.setTenant(TenantIdentifierResolver.DEFAULT_TENANT);
+             @Override
+             public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+                HttpServletRequest httpRequest = (HttpServletRequest) request;
+                String tenantId = httpRequest.getHeader("X-Tenant-ID");
+    
+                try {
+                    if (tenantId != null && !tenantId.isEmpty()) {
+                        TenantContext.setTenant(tenantId);
+                    } else {
+                        TenantContext.setTenant(TenantIdentifierResolver.DEFAULT_TENANT);
+                    }
+                    chain.doFilter(request, response);
+                } finally {
+                    TenantContext.clearTenant();
                 }
-                chain.doFilter(request, response);
-            } finally {
-                TenantContext.clearTenant();
             }
-        }
 
    ------------------------------------------------------
 
