@@ -1,3 +1,7 @@
+# Exception
+
+Note: Eğer flyway hatası oluşuyorsa, databaseden flyway schemasını siliniz.
+
 # Class TenantContext
 
 TenantContext sınıfı, her API isteği sırasında, o isteğe özel bir tenant bilgisi sağlar.
