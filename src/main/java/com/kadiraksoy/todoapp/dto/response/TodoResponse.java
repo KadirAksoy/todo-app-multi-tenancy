@@ -1,4 +1,4 @@
-package com.kadiraksoy.todoapp.dto;
+package com.kadiraksoy.todoapp.dto.response;
 
 import com.kadiraksoy.todoapp.entity.Todo;
 import lombok.AllArgsConstructor;

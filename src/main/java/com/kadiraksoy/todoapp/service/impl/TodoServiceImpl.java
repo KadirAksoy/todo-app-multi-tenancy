@@ -1,7 +1,7 @@
 package com.kadiraksoy.todoapp.service.impl;
 
 import com.kadiraksoy.todoapp.dto.TodoDto;
-import com.kadiraksoy.todoapp.dto.TodoResponse;
+import com.kadiraksoy.todoapp.dto.response.TodoResponse;
 import com.kadiraksoy.todoapp.entity.Todo;
 import com.kadiraksoy.todoapp.entity.User;
 import com.kadiraksoy.todoapp.exception.TodoNotFoundException;

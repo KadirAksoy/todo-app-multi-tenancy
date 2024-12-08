@@ -1,8 +1,7 @@
 package com.kadiraksoy.todoapp.controller;
 
 import com.kadiraksoy.todoapp.dto.TodoDto;
-import com.kadiraksoy.todoapp.dto.TodoResponse;
-import com.kadiraksoy.todoapp.entity.Todo;
+import com.kadiraksoy.todoapp.dto.response.TodoResponse;
 import com.kadiraksoy.todoapp.service.ITodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

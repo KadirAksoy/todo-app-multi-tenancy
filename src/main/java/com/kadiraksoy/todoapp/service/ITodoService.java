@@ -1,7 +1,7 @@
 package com.kadiraksoy.todoapp.service;
 
 import com.kadiraksoy.todoapp.dto.TodoDto;
-import com.kadiraksoy.todoapp.dto.TodoResponse;
+import com.kadiraksoy.todoapp.dto.response.TodoResponse;
 
 
 import java.util.List;
