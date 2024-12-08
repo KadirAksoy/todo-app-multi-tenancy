@@ -8,6 +8,7 @@ import com.kadiraksoy.todoapp.repository.IUserRepository;
 import com.kadiraksoy.todoapp.service.IUserService;
 import com.kadiraksoy.todoapp.utils.FlywayUtil;
 import lombok.RequiredArgsConstructor;
+import org.flywaydb.core.Flyway;
 import org.springframework.stereotype.Service;
 
 
@@ -18,16 +19,16 @@ import java.util.List;
 public class UserServiceImpl implements IUserService {
 
     private final IUserRepository userRepository;
-    private final DataSourceConfig dataSourceConfig;
+    private final Flyway flyway;
 
 
     @Override
     public User create(UserDto userDto) {
-        User user = UserDto.toUser(userDto);
+        User user = userRepository.save(UserDto.toUser(userDto));
 
         // Flyway yapılandırması
-        FlywayUtil.initTenantTables(dataSourceConfig.dataSource(), user.getUsername().toLowerCase() );
-        return userRepository.save(user);
+        FlywayUtil.initTenantTables(flyway.getConfiguration().getDataSource(), user.getUsername().toLowerCase() );
+        return user;
     }
 
     @Override

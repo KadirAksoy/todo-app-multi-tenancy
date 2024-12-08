@@ -3,7 +3,7 @@ import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver<String> {
+public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver<Object> {
 
 
     public static final String DEFAULT_TENANT = "public";

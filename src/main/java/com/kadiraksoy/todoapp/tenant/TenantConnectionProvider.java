@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 @Component
 @RequiredArgsConstructor
-public class TenantConnectionProvider implements MultiTenantConnectionProvider<String> {
+public class TenantConnectionProvider implements MultiTenantConnectionProvider<Object> {
 
     private final DataSource dataSource;
 
@@ -27,7 +27,7 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider<S
     }
 
     @Override
-    public Connection getConnection(String tenantIdentifier) throws SQLException {
+    public Connection getConnection(Object tenantIdentifier) throws SQLException {
         final Connection connection = getAnyConnection();
 
         connection.setSchema(tenantIdentifier.toString());
@@ -36,7 +36,7 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider<S
     }
 
     @Override
-    public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
+    public void releaseConnection(Object tenantIdentifier, Connection connection) throws SQLException {
         connection.setSchema(TenantIdentifierResolver.DEFAULT_TENANT);
 
         releaseAnyConnection(connection);

@@ -28,8 +28,8 @@ public class HibernateConfig {
     LocalContainerEntityManagerFactoryBean entityManagerFactory(
             DataSource dataSource,
             JpaProperties jpaProperties,
-            MultiTenantConnectionProvider<String> multiTenantConnectionProviderImpl,
-            CurrentTenantIdentifierResolver<String> currentTenantIdentifierResolverImpl) {
+            MultiTenantConnectionProvider<Object> multiTenantConnectionProviderImpl,
+            CurrentTenantIdentifierResolver<Object> currentTenantIdentifierResolverImpl) {
 
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);

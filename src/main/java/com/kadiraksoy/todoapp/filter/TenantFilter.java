@@ -11,11 +11,11 @@
         @Override
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
-            String tenantId = httpRequest.getHeader("X-Tenant-ID");
+            String username = httpRequest.getHeader("X-Tenant-ID");
 
             try {
-                if (tenantId != null && !tenantId.isEmpty()) {
-                    TenantContext.setTenant(tenantId);
+                if (username != null && !username.isEmpty()) {
+                    TenantContext.setTenant(username);
                 } else {
                     TenantContext.setTenant(TenantIdentifierResolver.DEFAULT_TENANT);
                 }
