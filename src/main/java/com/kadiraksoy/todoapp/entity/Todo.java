@@ -27,8 +27,5 @@ public class Todo {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+
 }
