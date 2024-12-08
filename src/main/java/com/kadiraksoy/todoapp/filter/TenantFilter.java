@@ -8,8 +8,6 @@
 
     public class TenantFilter implements Filter {
 
-        // X-Tenant-ID header'ı üzerinden tenant bilgisi alınır
-        // ve TenantContext'e atanır. İstek tamamlanınca bilgi temizlenir.
         @Override
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
             HttpServletRequest httpRequest = (HttpServletRequest) request;

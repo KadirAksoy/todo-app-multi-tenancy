@@ -14,20 +14,18 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider<S
 
     private final DataSource dataSource;
 
-    // tenant için bağlantı sağlar
+
     @Override
     public Connection getAnyConnection() throws SQLException {
         return dataSource.getConnection();
     }
 
-    // Verilen bağlantıyı serbest bırakır ve kapatır.
+
     @Override
     public void releaseAnyConnection(Connection connection) throws SQLException {
         connection.close();
     }
 
-    // (tenant) kimliği ile bir bağlantı alır.
-    // Bu bağlantının şeması, tenantIdentifier ile belirtilen şemaya ayarlanır.
     @Override
     public Connection getConnection(String tenantIdentifier) throws SQLException {
         final Connection connection = getAnyConnection();

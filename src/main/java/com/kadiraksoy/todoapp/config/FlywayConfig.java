@@ -11,35 +11,30 @@ import javax.sql.DataSource;
 @Configuration
 public class FlywayConfig {
 
-    // Varsayılan Flyway yapılandırması
     @Bean
     public Flyway flyway(DataSource dataSource) {
         Flyway flyway = Flyway.configure()
-                .locations("db/migration/default") // Varsayılan migration dosyaları
+                .locations("db/migration/default")
                 .dataSource(dataSource)
-                .schemas("public") // Varsayılan şema
+                .schemas("public")
                 .ignoreMigrationPatterns("ıgnored")
                 .load();
 
-        flyway.migrate(); // Varsayılan migration işlemi
+        flyway.migrate();
         return flyway;
     }
 
-    // Kullanıcılar için her biri ayrı şemada migration işlemi yapan CommandLineRunner
     @Bean
     public CommandLineRunner commandLineRunner(IUserRepository userRepository, DataSource dataSource) {
         return args -> {
-            // Kullanıcıları al
             userRepository.findAll().forEach(user -> {
-                String tenant = user.getUsername().toLowerCase(); // Tenant şeması olarak kullanıcının name'ini kullan
-                // Tenant'a özel Flyway yapılandırması
+                String tenant = user.getUsername().toLowerCase();
                 Flyway flyway = Flyway.configure()
-                        .locations("db/migration/tenants") // Tenant'a özel migration dosyaları
+                        .locations("db/migration/tenants")
                         .dataSource(dataSource)
-                        .schemas(tenant) // Tenant'a özel şema adı
+                        .schemas(tenant)
                         .load();
 
-                // Tenant'a özel migration işlemi uygula
                 flyway.migrate();
             });
         };
