@@ -15,7 +15,7 @@
 
             try {
                 if (username != null && !username.isEmpty()) {
-                    TenantContext.setTenant(username);
+                    TenantContext.setTenant(username.toLowerCase());
                 } else {
                     TenantContext.setTenant(TenantIdentifierResolver.DEFAULT_TENANT);
                 }
