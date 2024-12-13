@@ -269,5 +269,10 @@ Bu, çoklu kullanıcıların aynı anda uygulamayı kullanırken tenant bilgiler
             });
           }
 
+------------------------------------------------------ 
 
 # FlyUtils
+
+
+belirtilen şema (schema) için Flyway kullanarak veritabanı migrasyonlarını çalıştırır. 
+Özellikle, çok kiracılı bir sistemde her kiracı için ayrı şema ve tablolar oluşturmak veya güncellemek amacıyla kullanılır.
