@@ -276,3 +276,20 @@ Bu, çoklu kullanıcıların aynı anda uygulamayı kullanırken tenant bilgiler
 
 belirtilen şema (schema) için Flyway kullanarak veritabanı migrasyonlarını çalıştırır. 
 Özellikle, çok kiracılı bir sistemde her kiracı için ayrı şema ve tablolar oluşturmak veya güncellemek amacıyla kullanılır.
+
+
+        package com.kadiraksoy.todoapp.utils;
+        import org.flywaydb.core.Flyway;
+        
+        import javax.sql.DataSource;
+        
+        public class FlywayUtil {
+            public static void initTenantTables(DataSource dataSource, String schema) {
+                Flyway.configure()
+                        .dataSource(dataSource)
+                        .locations("db/migration/tenants")
+                        .schemas(schema)
+                        .load()
+                        .migrate();
+            }
+        }
